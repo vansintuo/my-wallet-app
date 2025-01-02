@@ -1,8 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-      images: {
-        domains: ['img.freepik.com',"png.pngtree.com"], // Allowed domains for external images
-    },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.freepik.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'png.pngtree.com',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

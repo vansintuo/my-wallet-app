@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
-
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 const Header = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -29,24 +34,32 @@ const Header = () => {
           <Link href="/" className="hover:underline">
             Home
           </Link>
-          <Link href="/about" className="hover:underline">
+          <Link href="/api/students" className="hover:underline">
             About
           </Link>
           <Link href="/contact" className="hover:underline">
             Contact
           </Link>
         </nav>
+      <div className="flex gap-2">
 
         {/* Theme Toggle */}
         <button
-          className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 px-3 py-1 rounded"
+          className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 px-3 py-1 rounded flex space-x-4"
           onClick={() => {
-            console.log("Current theme:", theme); 
+            console.log("Current theme:", theme);
             setTheme(theme === "light" ? "dark" : "light");
           }}
         >
           {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
         </button>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </div>
       </div>
     </header>
   );
