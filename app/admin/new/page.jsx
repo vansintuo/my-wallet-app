@@ -1,17 +1,16 @@
-"use client";
 import React from "react";
-import { useState, useEffect } from "react";
-function Page() {
-  const [students, setStudents] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const res = await fetch("/api/students");
-      const data = await res.json();
-      setStudents(data);
-    }
-    fetchData();
-  }, []);
+async function fetchStudents() {
+  const res = await fetch("/api/students", {
+    cache: "no-store", // Optional: For SSR-like behavior
+  });
+  if (!res.ok) throw new Error("Failed to fetch students data");
+  return res.json();
+}
+
+export default async function Page() {
+  const students = await fetchStudents();
+
   return (
     <div>
       <table className="table-auto w-full border-collapse border border-gray-400">
@@ -23,23 +22,21 @@ function Page() {
           </tr>
         </thead>
         <tbody>
-          {students.map((student, index) => (
-            <tr key={index}>
-              <td className="border border-gray-300 px-4 py-2">
-                {student.name}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {student.age}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {student.gpa}
-              </td>
+          {students.length === 0 ? (
+            <tr>
+              <td colSpan="3" className="text-center">No students found</td>
             </tr>
-          ))}
+          ) : (
+            students.map((student) => (
+              <tr key={student.id}>
+                <td className="border border-gray-300 px-4 py-2">{student.name}</td>
+                <td className="border border-gray-300 px-4 py-2">{student.age}</td>
+                <td className="border border-gray-300 px-4 py-2">{student.gpa}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
   );
 }
-
-export default Page;
